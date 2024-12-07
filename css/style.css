@@ -1,0 +1,146 @@
+body {
+	background-color: #F6F6FF;
+	font-family: "Roboto", sans-serif;
+	color: #3A3A48;
+}
+
+header {
+	width: 100%;
+	height: 6.75rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.519rem;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0.1px 25px 0px rgba(0, 0, 0, 0.12);
+}
+
+main {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1.103rem;
+	margin-top: 1.103rem;
+	margin-bottom: 1.103rem;
+}
+
+header img {
+	height: 2.4rem;
+}
+
+header h1 {
+	font-size: 1.365rem;
+	font-weight: 700;
+}
+
+main section {
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	padding: 1.313rem;
+	border-radius: 0.84rem;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0.1px 25px 0px rgba(0, 0, 0, 0.12);
+}
+
+main section#links {
+	flex-wrap: wrap;
+	gap: 0.788rem;
+}
+
+main section#links a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.473rem;
+	border-radius: 0.735rem;
+	font-weight: 500;
+}
+
+main section#links a, a:visited, a:hover, a:active {
+	color: #3A3A48;
+}
+
+main section#links a.full {
+	width: 100%;
+	height: 2.888rem;
+	flex-grow: 1;
+	font-size: 1.103rem;
+}
+
+main section#links a.full img {
+	height: 1.26rem;
+}
+
+main section#links a.half {
+	height: 2.284rem;
+	flex: 1 0 calc(50% - 0.473rem);
+	font-size: 0.84rem
+}
+
+main section#links a.half img {
+	height: 1.024rem;
+}
+
+main section#links a.quarter {
+	flex: 1 0 21%;
+	padding: 0.564rem;
+}
+
+main section#links a.quarter img {
+	height: 1.155rem;
+}
+
+main section#links a.yellow {
+	background-color: #FFEB00;
+}
+
+main section#links a.hollow {
+	border: 0.066rem solid rgba(0, 0, 0, 0.28);
+}
+
+main section#horario {
+	flex-direction: column;
+	align-items: center;
+}
+
+main section#horario h3 {
+	font-size: 1.103rem;
+	margin-bottom: 1.102rem;
+}
+
+main section#horario div {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+}
+
+main section#horario div.main {
+	font-size: 0.84rem;
+	font-weight: 500;
+}
+
+main section#horario div.sub {
+	font-size: 0.735rem;
+	font-weight: 500;
+	color: #696975;
+}
+
+main section#horario div.aberto p:first-child {
+	color: #3FBA57;
+}
+
+main section#horario div img {
+	width: 0.8rem;
+	margin-left: 0.4rem;
+}
+
+main section#horario div.sub p:last-child {
+	margin-right: 1.5rem;
+}
+
+main section#horario div+div {
+	margin-top: 0.304rem;
+}
