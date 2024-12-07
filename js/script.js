@@ -3,6 +3,10 @@ window.onload = () => {
 	let arrow = document.getElementById('arrow');
 	let subHorario = document.getElementById('sub');
 	let modal = document.getElementById('modal');
+	let mapa = document.getElementById('imapa');
+	let pin = document.getElementById('pin')
+
+	pin.style.height = `${mapa.clientHeight}px`;
 
 	arrow.addEventListener('click', () => {
 		if (subHorario.style.maxHeight === '0px' || subHorario.style.maxHeight === '') {

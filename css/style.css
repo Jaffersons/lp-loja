@@ -75,6 +75,10 @@ main section#links a.full {
 }
 
 main section#links a.full img {
+	height: 1.412rem;
+}
+
+main section#links a.full#google img {
 	height: 1.26rem;
 }
 
@@ -196,6 +200,18 @@ main section#mapa iframe {
 	width: 100%;
 	min-height: 15rem;
 	border-radius: 0.735rem;
+}
+
+main section#mapa a#pin {
+	display: block;
+	position: absolute;
+	width: calc(90% - 2.626rem);
+	margin-top: 4.2rem;
+	background-color: rgba(255, 255, 255, 0.2);
+	background-image: url(../imgs/pin.svg);
+	background-size: 1.77rem;
+	background-position: 50% calc(50% - 20px);
+	background-repeat: no-repeat !important;
 }
 
 div#modal	{
