@@ -1,6 +1,6 @@
 body {
 	background-color: #F6F6FF;
-	font-family: "Roboto", sans-serif;
+	font-family: 'CVC Sans', Helvetica, sans-serif !important;
 	color: #3A3A48;
 }
 
@@ -192,8 +192,9 @@ main section#mapa div p:first-of-type{
 	margin-bottom: 0.1rem;
 }
 
-main section#mapa img {
+main section#mapa iframe {
 	width: 100%;
+	min-height: 15rem;
 	border-radius: 0.735rem;
 }
 
