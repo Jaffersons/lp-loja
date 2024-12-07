@@ -45,6 +45,10 @@ main section {
 	box-shadow: 0px 0.1px 25px 0px rgba(0, 0, 0, 0.12);
 }
 
+main section h3 {
+	font-size: 1.103rem;
+}
+
 main section#links {
 	flex-wrap: wrap;
 	gap: 0.788rem;
@@ -102,45 +106,112 @@ main section#links a.hollow {
 }
 
 main section#horario {
-	flex-direction: column;
-	align-items: center;
+	display: grid;
+	grid-template-columns: calc(100% - 1.2rem) 1.2rem;
 }
 
 main section#horario h3 {
-	font-size: 1.103rem;
+	grid-column-end: span 2;
 	margin-bottom: 1.102rem;
+	text-align: center;
 }
 
-main section#horario div {
+main section#horario div#main,
+main section#horario div#sub div {
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
+	font-weight: 500;
 }
 
-main section#horario div.main {
+main section#horario div#main {
 	font-size: 0.84rem;
-	font-weight: 500;
 }
 
-main section#horario div.sub {
-	font-size: 0.735rem;
-	font-weight: 500;
+main section#horario div#sub {
+	display: flex;
+	flex-direction: column;
+	gap: 0.204rem;
+	margin-top: 0.204rem;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.5s ease-in-out;
+}
+
+main section#horario div#sub div {
+	font-size: 0.74rem;
 	color: #696975;
 }
 
-main section#horario div.aberto p:first-child {
+main section#horario div#arrow {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+main section#horario div#arrow img{
+	width: 0.8rem;
+}
+
+main section#horario div.open p:first-child {
+	font-weight: 700;
 	color: #3FBA57;
 }
 
-main section#horario div img {
-	width: 0.8rem;
-	margin-left: 0.4rem;
+main section#horario div.closed p:first-child {
+	font-weight: 700;
+	color: #E35F5F;
 }
 
-main section#horario div.sub p:last-child {
-	margin-right: 1.5rem;
+main section#mapa {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.473rem;
 }
 
-main section#horario div+div {
-	margin-top: 0.304rem;
+main section#mapa div {
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto;
+	justify-content: center;
+	align-items: center;
+}
+
+main section#mapa div img {
+	width: 1.1rem;
+	grid-row-end: span 2;
+	margin-right: 0.5rem;
+}
+
+main section#mapa div p {
+	font-size: 0.735rem;
+}
+
+main section#mapa div p:first-of-type{
+	margin-bottom: 0.1rem;
+}
+
+main section#mapa img {
+	width: 100%;
+	border-radius: 0.735rem;
+}
+
+div#modal	{
+	display: block;
+	position: absolute;
+	top: 90%;
+	visibility: hidden;
+	opacity: 0;
+	padding: 0.8rem;
+	border-radius: 0.84rem;
+	background-color: rgba(58, 58, 72, 0.8);
+	color: #ffffff;
+	z-index: 999;
+	transition: opacity .1s;
+	transition-timing-function: cubic-bezier(0, 0, 0.1, 0.1);
+}
+
+div#modal.show {
+	opacity: 1;
 }
