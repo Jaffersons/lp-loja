@@ -6,7 +6,11 @@ window.onload = () => {
 	let mapa = document.getElementById('imapa');
 	let pin = document.getElementById('pin')
 
-	pin.style.height = `${mapa.clientHeight}px`;
+	function resizePin() {
+		pin.style.height = `${mapa.clientHeight}px`;
+	}
+
+	resizePin();
 
 	arrow.addEventListener('click', () => {
 		if (subHorario.style.maxHeight === '0px' || subHorario.style.maxHeight === '') {
@@ -23,6 +27,10 @@ window.onload = () => {
       	subHorario.style.display = 'none';
     	}, 500);
   	}
+
+		setTimeout(() => {
+			resizePin();
+		}, 600);
 	});
 
 	pixButton.addEventListener('click', async () => {
@@ -66,5 +74,9 @@ window.onload = () => {
 		setTimeout(() => {
 			modal.style.visibility = 'hidden'
 		}, 5000);
+	}
+	
+	window.onresize = () => {
+		resizePin();
 	}
 }

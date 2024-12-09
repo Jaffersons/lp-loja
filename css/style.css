@@ -19,8 +19,9 @@ header {
 main {
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 	flex-wrap: wrap;
-	justify-content: center;
+	align-items: center;
 	gap: 1.103rem;
 	margin-top: 1.103rem;
 	margin-bottom: 1.103rem;
@@ -36,7 +37,7 @@ header h1 {
 }
 
 main section {
-	width: 90%;
+	width: 23.875rem;
 	display: flex;
 	justify-content: center;
 	padding: 1.313rem;
@@ -205,9 +206,9 @@ main section#mapa iframe {
 main section#mapa a#pin {
 	display: block;
 	position: absolute;
-	width: calc(90% - 2.626rem);
+	width: calc(23.875rem - 2.626rem);
 	margin-top: 4.2rem;
-	background-color: rgba(255, 255, 255, 0.2);
+	/*background-color: rgba(255, 255, 255, 0.2);*/
 	background-image: url(../imgs/pin.svg);
 	background-size: 1.77rem;
 	background-position: 50% calc(50% - 20px);
@@ -216,8 +217,10 @@ main section#mapa a#pin {
 
 div#modal	{
 	display: block;
-	position: absolute;
-	top: 90%;
+	position: fixed;
+	width: 20.75rem;
+	top: 90vh;
+	left: calc( 50vw - 10.375rem);
 	visibility: hidden;
 	opacity: 0;
 	padding: 0.8rem;
@@ -227,8 +230,64 @@ div#modal	{
 	z-index: 999;
 	transition: opacity .1s;
 	transition-timing-function: cubic-bezier(0, 0, 0.1, 0.1);
+	text-align: center;
 }
 
 div#modal.show {
 	opacity: 1;
+}
+
+@media screen and ( min-width: 1000px ) {
+	main section {
+		width: 25.449rem;
+		padding: 2.100rem;
+	}
+	
+	section#mapa {
+		width: 39.774rem;
+	}
+
+	main section#mapa a#pin {
+		width: calc(39.774rem - 2.626rem);
+	}
+}
+
+@media screen and ( min-width: 821px ) {
+	main {
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-template-rows: auto auto;
+		justify-content: center;
+		align-items: start;
+	}
+
+	section#links {
+		grid-column-end: 1;
+		grid-row-end: 1;
+	}
+
+	section#horario {
+		grid-column-end: 1;
+		grid-row-end: 2;
+	}
+
+	section#mapa {
+		height: 100%;
+		grid-column-end: 2;
+		grid-row-end: span 2;
+	}
+
+	section#mapa iframe#imapa {
+		height: calc( 100% - 1.103rem - calc( calc( 0.735rem * 2 ) - 0.1rem  ) );
+	}
+}
+
+@media screen and (max-width: 425px) {
+	main section {
+		width: 90%;
+	}
+
+	main section#mapa a#pin {
+		width: calc(90% - 2.626rem);
+	}
 }
