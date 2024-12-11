@@ -176,8 +176,7 @@ main section#mapa {
 
 main section#mapa div {
 	display: grid;
-	grid-template-columns: auto auto;
-	grid-template-rows: auto auto;
+	grid-template-columns: 1.6rem auto 1.6rem;
 	justify-content: center;
 	align-items: center;
 }
@@ -185,15 +184,12 @@ main section#mapa div {
 main section#mapa div img {
 	width: 1.1rem;
 	grid-row-end: span 2;
-	margin-right: 0.5rem;
 }
 
 main section#mapa div p {
 	font-size: 0.735rem;
-}
-
-main section#mapa div p:first-of-type{
 	margin-bottom: 0.1rem;
+	text-align: center;
 }
 
 main section#mapa iframe {
@@ -207,7 +203,10 @@ main section#mapa a#pin {
 	position: absolute;
 	width: calc(90% - 2.626rem);
 	margin-top: 4.2rem;
+<<<<<<< Updated upstream
 	background-color: rgba(255, 255, 255, 0.2);
+=======
+>>>>>>> Stashed changes
 	background-image: url(../imgs/pin.svg);
 	background-size: 1.77rem;
 	background-position: 50% calc(50% - 20px);
@@ -231,4 +230,76 @@ div#modal	{
 
 div#modal.show {
 	opacity: 1;
+<<<<<<< Updated upstream
+=======
+}
+
+@media screen and ( min-width: 1000px ) {
+	main section {
+		width: 25.449rem;
+		padding: 2.100rem;
+	}
+	
+	section#mapa {
+		width: 39.774rem;
+	}
+
+	main section#mapa a#pin {
+		width: calc(39.774rem - 2.626rem);
+	}
+}
+
+@media screen and ( min-width: 821px ) {
+	main {
+		display: grid;
+		grid-template-columns: auto auto;
+		grid-template-rows: auto auto;
+		justify-content: center;
+		align-items: start;
+	}
+
+	section#links {
+		grid-column-end: 1;
+		grid-row-end: 1;
+	}
+
+	main section#horario {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		grid-column-end: 1;
+		grid-row-end: 2;
+	}
+
+	main section#horario div#arrow{
+		display: none;
+	}
+
+	main section#horario div#sub {
+		display: flex;
+		width: 100%;
+		max-height: 300px;
+		transition: none;
+	}
+
+	section#mapa {
+		height: 100%;
+		grid-column-end: 2;
+		grid-row-end: span 2;
+	}
+
+	section#mapa iframe#imapa {
+		height: calc( 100% - 1.103rem - calc( calc( 0.735rem * 2 ) - 0.1rem  ) );
+	}
+}
+
+@media screen and (max-width: 425px) {
+	main section {
+		width: 90%;
+	}
+
+	main section#mapa a#pin {
+		width: calc(90% - 2.626rem);
+	}
+>>>>>>> Stashed changes
 }
