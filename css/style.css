@@ -300,3 +300,67 @@ div#modal.show {
 		width: calc(90% - 2.626rem);
 	}
 }
+
+.skeleton {
+	animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+	0% {
+		background-color: hsl(200, 20%, 80%);
+	}
+
+	100% {
+		background-color: hsl(200, 20%, 95%);
+	}
+}
+
+.skeleton-button-full {
+	width: 100%;
+	height: 2.888rem;
+	border-radius: 0.735rem;
+	color: transparent !important;
+}
+
+.skeleton-button-half {
+	height: 2.284rem;
+	flex: 1 0 calc(50% - 0.473rem);
+	border-radius: 0.735rem;
+	color: transparent !important;
+}
+
+.skeleton-button-quarter {
+	height: 2.284rem;
+	flex: 1 0 21%;
+	padding: 0.564rem;
+	border-radius: 0.735rem;
+	color: transparent !important;
+}
+
+.skeleton-button-full * {
+	visibility: hidden;
+}
+
+.skeleton-button-half * {
+	visibility: hidden;
+}
+
+.skeleton-button-quarter * {
+	visibility: hidden;
+}
+
+.skeleton-title {
+	width: 18.438rem;
+	height: 1.365rem;
+}
+
+.skeleton-endereco {
+	width: 16.25rem;
+	height: 1.75rem;
+}
+
+.skeleton-mapa {
+	width: 100%;
+	height: 16rem;
+	border-radius: 0.735rem;
+}
