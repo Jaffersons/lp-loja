@@ -19,8 +19,9 @@ header {
 main {
 	width: 100%;
 	display: flex;
+	flex-direction: column;
 	flex-wrap: wrap;
-	justify-content: center;
+	align-items: center;
 	gap: 1.103rem;
 	margin-top: 1.103rem;
 	margin-bottom: 1.103rem;
@@ -36,7 +37,7 @@ header h1 {
 }
 
 main section {
-	width: 90%;
+	width: 23.875rem;
 	display: flex;
 	justify-content: center;
 	padding: 1.313rem;
@@ -201,12 +202,8 @@ main section#mapa iframe {
 main section#mapa a#pin {
 	display: block;
 	position: absolute;
-	width: calc(90% - 2.626rem);
+	width: calc(23.875rem - 2.626rem);
 	margin-top: 4.2rem;
-<<<<<<< Updated upstream
-	background-color: rgba(255, 255, 255, 0.2);
-=======
->>>>>>> Stashed changes
 	background-image: url(../imgs/pin.svg);
 	background-size: 1.77rem;
 	background-position: 50% calc(50% - 20px);
@@ -215,8 +212,10 @@ main section#mapa a#pin {
 
 div#modal	{
 	display: block;
-	position: absolute;
-	top: 90%;
+	position: fixed;
+	width: 20.75rem;
+	top: 90vh;
+	left: calc( 50vw - 10.375rem);
 	visibility: hidden;
 	opacity: 0;
 	padding: 0.8rem;
@@ -226,12 +225,11 @@ div#modal	{
 	z-index: 999;
 	transition: opacity .1s;
 	transition-timing-function: cubic-bezier(0, 0, 0.1, 0.1);
+	text-align: center;
 }
 
 div#modal.show {
 	opacity: 1;
-<<<<<<< Updated upstream
-=======
 }
 
 @media screen and ( min-width: 1000px ) {
@@ -301,5 +299,4 @@ div#modal.show {
 	main section#mapa a#pin {
 		width: calc(90% - 2.626rem);
 	}
->>>>>>> Stashed changes
 }
