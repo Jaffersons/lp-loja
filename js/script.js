@@ -1,3 +1,56 @@
+const IDList = {
+	'pes_fantas': {
+		classes: [],
+		fill: (e, c) => { 
+			m = c.match(/^(CVC)\s(.*)$/);
+			e.innerHTML = `${m[1]} ${m[2].toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase())}`; 
+		},
+	},
+	'fil_lndpag': {
+		classes: ['full', 'yellow'],
+		fill: (e, c) => { e.href = c },
+	},
+	'google': {
+		classes: ['full', 'yellow'],
+		fill: (e, c) => { e.href = c },
+	},
+	'pix': {
+		classes: ['full', 'yellow'],
+		fill: (e, c) => { 
+			e.style.cursor = 'pointer';
+			e.addEventListener('click', () => { copyText(c) }) 
+		}
+	},
+	'contato': {
+		classes: ['half', 'yellow'],
+		fill: (e, c) => { e.href = c ?? '#' },
+	},
+	'fone': {
+		classes: ['half', 'yellow'],
+		fill: (e, c) => { e.href = `tel:${c}` },
+	},
+	'facebook': {
+		classes: ['quarter', 'hollow'],
+		fill: (e, c) => { e.href = c },
+	},
+	'instagram': {
+		classes: ['quarter', 'hollow'],
+		fill: (e, c) => { e.href = c },
+	},
+	'whatsapp': {
+		classes: ['quarter', 'hollow'],
+		fill: (e, c) => { e.href = c },
+	},
+	'youtube': {
+		classes: ['quarter', 'hollow'],
+		fill: (e, c) => { e.href = c ?? "https://www.youtube.com/cvcviagens" },
+	},
+	'endereco': {
+		classes: [],
+		fill: (e, c) => { e.innerHTML = `${c.endereco}<br>${c.bairro} - ${c.cidade} - ${c.cep}` },
+	}
+};
+
 async function delay(delay = 1000, callback = () => {} ) {
 	const delayPromise = ms => new Promise(res => setTimeout(res, ms));
 	await delayPromise(delay);
@@ -47,69 +100,36 @@ async function copyText(textToCopy) {
 	}
 };
 
-window.onload = async () => {
-	const IDList = {
-		'pes_fantas': {
-			classes: [],
-			fill: (e, c) => { 
-				m = c.match(/^(CVC)\s(.*)$/);
-				e.innerHTML = `${m[1]} ${m[2].toLowerCase().replace(/(?:^|\s|["'([{])+\S/g, match => match.toUpperCase())}`; 
-			},
-		},
-		'fil_lndpag': {
-			classes: ['full', 'yellow'],
-			fill: (e, c) => { e.href = c },
-		},
-		'google': {
-			classes: ['full', 'yellow'],
-			fill: (e, c) => { e.href = c },
-		},
-		'pix': {
-			classes: ['full', 'yellow'],
-			fill: (e, c) => { 
-				e.style.cursor = 'pointer';
-				e.addEventListener('click', () => { copyText(c) }) 
-			}
-		},
-		'contato': {
-			classes: ['half', 'yellow'],
-			fill: (e, c) => { e.href = c ?? '#' },
-		},
-		'fone': {
-			classes: ['half', 'yellow'],
-			fill: (e, c) => { e.href = `tel:${c}` },
-		},
-		'facebook': {
-			classes: ['quarter', 'hollow'],
-			fill: (e, c) => { e.href = c },
-		},
-		'instagram': {
-			classes: ['quarter', 'hollow'],
-			fill: (e, c) => { e.href = c },
-		},
-		'whatsapp': {
-			classes: ['quarter', 'hollow'],
-			fill: (e, c) => { e.href = c },
-		},
-		'youtube': {
-			classes: ['quarter', 'hollow'],
-			fill: (e, c) => { e.href = c ?? "https://www.youtube.com/cvcviagens" },
-		},
-		'endereco': {
-			classes: [],
-			fill: (e, c) => { e.innerHTML = `${c.endereco}<br>${c.bairro} - ${c.cidade} - ${c.cep}` },
-		}
-	};
+function makeMapUrl(lat = 0, lon = 0) {
+	lat = parseFloat(lat);
+	lon = parseFloat(lon);
+	const latdif = lat * 0.0001;
+	const londif = lon * 0.0001;
+	const bbox = [ 
+		lon - londif, lat - latdif,
+		lon + londif, lat + latdif
+	];
+	let src = "bbox=-48.61769378185273%2C-27.603179848634635%2C-48.60873520374299%2C-27.598901319447833";
 
+	return src.replace(/(bbox=).*/, "$1" + bbox.join("%2C"));
+}
+
+function resizePin(pin, imapa) {
+	pin.style.height = `${imapa.clientHeight}px`;
+}
+
+window.onload = async () => {
 	let elements = document.querySelectorAll('.skeleton');
 
-	let arrow = document.getElementById('arrow');
-	let subHorario = document.getElementById('sub');
+	let arrow = document.querySelector('#arrow');
+	let mainHorario = document.querySelector('#main');
+	let subHorario = document.querySelector('#sub');
+	
 	let mapa = document.querySelector('#divMapa');
 	let imapa = document.querySelector('#imapa');
 	let pin = document.querySelector('#pin')
 
-	delay(100, () => {
+	delay(3000, () => {
 		const res = {
 			"pes_fantas": "CVC VILLA ROMANA SHOPPING",
 			"fil_lndpag": "https://cvcvillaromanashopping.ofertascvcpravc.com.br/",
@@ -125,8 +145,17 @@ window.onload = async () => {
 			"endereco": "Avenida Madre Benvenuta, 687 Loja 345",
 			"bairro": "Santa Mônica",
 			"cidade": "Florianópolis/SC",
-			"pes_geolat": "-27,600822",
-			"pes_geolon": "-48,597099"
+			"pes_geolat": "-27,589714",
+			"pes_geolon": "-48,515266",
+			"horarios": [
+        { dia: "Domingo", horini: "14:00", horfim: "20:00" },
+				{ dia: "Segunda-feira", horini: "10:00", horfim: "22:00" },
+        { dia: "Terça-feira", horini: "10:00", horfim: "22:00" },
+        { dia: "Quarta-feira", horini: "10:00", horfim: "22:00" },
+        { dia: "Quinta-feira", horini: "10:00", horfim: "22:00" },
+        { dia: "Sexta-feira", horini: "10:00", horfim: "22:00" },
+        { dia: "Sábado", horini: "10:00", horfim: "22:00" },
+			]
 		}
 
 		res.endereco = {
@@ -135,6 +164,9 @@ window.onload = async () => {
 			'cidade': res.cidade,
 			'cep': res.cep,
 		}
+
+		res.pes_geolat  =  res.pes_geolat.replace(',', '.');
+		res.pes_geolon  =  res.pes_geolon.replace(',', '.');
 
 		for (const element of elements ) {
 			if(IDList.hasOwnProperty(element.id)) {
@@ -147,14 +179,16 @@ window.onload = async () => {
 
 		mapa.remove();
 		imapa.style.display = '';
-		imapa.src = `https://www.openstreetmap.org/export/embed.html?bbox=${res['pes_geolat'] + '%2C' + res['pes_geolon']}&amp;layer=mapnik&amp`
+		imapa.setAttribute('data-src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
+		imapa.setAttribute('src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
+		pin.style.display = '';
+		pin.href = `geo:${res.pes_geolat},${res.pes_geolon}`;
+		resizePin(pin, imapa);
+
+		let now = new Date();
+		let dayOfWeek = now.getDay();
+		let today = res.horarios[dayOfWeek];
 	});
-
-	function resizePin() {
-		pin.style.height = `${imapa.clientHeight}px`;
-	}
-
-	resizePin();
 
 	arrow.addEventListener('click', () => {
 		if (subHorario.style.maxHeight === '0px' || subHorario.style.maxHeight === '') {
@@ -173,11 +207,11 @@ window.onload = async () => {
   	}
 
 		setTimeout(() => {
-			resizePin();
+			resizePin(pin, imapa);
 		}, 600);
 	});
 
 	window.onresize = () => {
-		resizePin();
+		resizePin(pin, imapa);
 	}
 }
