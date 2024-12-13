@@ -1,4 +1,4 @@
-var globals = {
+const globals = {
 	'horarioResizer': false
 }
 
@@ -129,7 +129,6 @@ function resizePin(pin, imapa) {
 window.onload = async () => {
 	let elements = document.querySelectorAll('.skeleton');
 
-	let arrow = document.querySelector('#arrow');
 	let horario = document.querySelector('#horario');
 	let mainHorario = document.querySelector('#main');
 	let subHorario = document.querySelector('#sub');
@@ -139,7 +138,9 @@ window.onload = async () => {
 	let imapa = document.querySelector('#imapa');
 	let pin = document.querySelector('#pin')
 
-	delay(2000, () => {
+	let today = '';
+
+	await delay(2000, () => {
 		const res = {
 			"pes_fantas": "CVC VILLA ROMANA SHOPPING",
 			"fil_lndpag": "https://cvcvillaromanashopping.ofertascvcpravc.com.br/",
@@ -148,7 +149,6 @@ window.onload = async () => {
 			"whatsapp": "https://wa.me/5548988393197",
 			"facebook": "https://facebook.com/CVC.SC.VillaRomanaShopping",
 			"instagram": "https://instagram.com/CVC.SC.VillaRomanaShopping",
-			"messenger": "https://m.me/CVC.SC.VillaRomanaShopping",
 			"google": "https://g.page/r/CQKEV-dRGLmrEBM/review",
 			"cep": "88.035-000",
 			"endereco": "Avenida Madre Benvenuta, 687 Loja 345",
@@ -197,7 +197,7 @@ window.onload = async () => {
 		let now = new Date();
 		let dayOfWeek = now.getDay();
 		let hourNow = (now.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'})).split(':', 1)
-		let today = res.horarios[dayOfWeek];
+		today = res.horarios[dayOfWeek];
 		let otherDays = [];
 
 		if (dayOfWeek == 0) otherDays = res.horarios.slice(dayOfWeek + 1);
@@ -205,20 +205,30 @@ window.onload = async () => {
 				else otherDays = (res.horarios.slice(dayOfWeek + 1)).concat(res.horarios.slice(0, dayOfWeek));
 
 		if (parseInt(hourNow) < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
-			else if (parseInt(hourNow) >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
+			else if (parseInt(hourNow) >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
 				else mainHorario.innerHTML = `<p class='open'>Aberto</p><p>${today.horini}-${today.horfim}</p>`
 
 		for(let i = 0; i < otherDays.length; i++){
-			subs[i].innerHTML = `<p>${otherDays[i].dia}</p><p>${otherDays[i].horini}-${otherDays[i].horfim}</p>`
+			let firstP = `<p>${otherDays[i].dia}</p>`
+			let secondP = '<p>' + (otherDays[i].horini !== "" ? `${otherDays[i].horini}-${otherDays[i].horfim}` : 'Fechado') + '</p>'
+			subs[i].innerHTML = firstP + secondP;
 		}
 
 		mainHorario.classList.remove(...mainHorario.classList);
 		subHorario.classList.remove(...subHorario.classList);
 	});
 
+	const mainHorarioTextChanger = status => {
+		let mainHorarioText = mainHorario.querySelector('p');
+
+		if (status == 'boxOpened') mainHorarioText.innerHTML = today.dia;
+			else mainHorarioText.innerHTML = mainHorarioText.className == 'open' ? 'Aberto' : 'Fechado';
+	}
+
 	const horarioResizer = () => {
 		if (subHorario.style.maxHeight === '0px' || subHorario.style.maxHeight === '') {
 			subHorario.style.display = 'flex';
+			mainHorarioTextChanger('boxOpened');
 		
 			setTimeout(() => {
 				subHorario.style.maxHeight = '300px';
@@ -229,6 +239,7 @@ window.onload = async () => {
 			
 			setTimeout(() => {
 				subHorario.style.display = 'none';
+				mainHorarioTextChanger('boxClosed');
 			}, 500);
 		}
 
@@ -236,6 +247,8 @@ window.onload = async () => {
 			resizePin(pin, imapa);
 		}, 600);
 	}
+
+	if( window.innerWidth >= 821 ) mainHorarioTextChanger('boxOpened');
 
 	if( window.innerWidth < 821 ) {
 		horario.addEventListener('click', horarioResizer);
@@ -248,9 +261,12 @@ window.onload = async () => {
 		if ( window.innerWidth >= 821 && globals.horarioResizer === true ) {
 			horario.removeEventListener('click', horarioResizer);
 			globals.horarioResizer = false;
+
+			mainHorarioTextChanger('boxOpened');
 		} else if (window.innerWidth < 821 && globals.horarioResizer === false) {
 			horario.addEventListener('click', horarioResizer);
 			globals.horarioResizer = true;
+			mainHorarioTextChanger('boxClosed');
 		}
 	}
 }
