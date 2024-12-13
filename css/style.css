@@ -356,7 +356,7 @@ div#modal.show {
 		max-height: 300px;
 		transition: none;
 	}
-
+  
 	section#mapa {
 		height: 100%;
 		grid-column-end: 2;
