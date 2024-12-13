@@ -141,7 +141,6 @@ window.onload = async () => {
 			"instagram": "https://instagram.com/CVC.SC.VillaRomanaShopping",
 			"messenger": "https://m.me/CVC.SC.VillaRomanaShopping",
 			"google": "https://g.page/r/CQKEV-dRGLmrEBM/review",
-			"geo": "geo:-27.589714,-48.515266",
 			"cep": "88.035-000",
 			"endereco": "Avenida Madre Benvenuta, 687 Loja 345",
 			"bairro": "Santa Mônica",
@@ -183,7 +182,7 @@ window.onload = async () => {
 		imapa.setAttribute('data-src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
 		imapa.setAttribute('src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
 		pin.style.display = '';
-		pin.href = `geo:${res.pes_geolat},${res.pes_geolon}`;
+		pin.href = `geo:${res.pes_geolat},${res.pes_geolon}?z=16&amp;q=${res.pes_geolat},${res.pes_geolon}`;
 		resizePin(pin, imapa);
 
 		let now = new Date();
