@@ -187,6 +187,7 @@ window.onload = async () => {
 
 		let now = new Date();
 		let dayOfWeek = now.getDay();
+		let hourNow = (now.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'})).split(':', 1)
 		let today = res.horarios[dayOfWeek];
 		let otherDays = [];
 
@@ -194,8 +195,8 @@ window.onload = async () => {
 			else if (dayOfWeek == 6) otherDays = res.horarios.slice(0, dayOfWeek);
 				else otherDays = (res.horarios.slice(dayOfWeek + 1)).concat(res.horarios.slice(0, dayOfWeek));
 
-		if (now.getHours() < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
-			else if (now.getHours() >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
+		if (parseInt(hourNow) < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
+			else if (parseInt(hourNow) >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
 				else mainHorario.innerHTML = `<p class='open'>Aberto</p><p>${today.horini}-${today.horfim}</p>`
 
 		for(let i = 0; i < otherDays.length; i++){
