@@ -124,6 +124,7 @@ window.onload = async () => {
 	let arrow = document.querySelector('#arrow');
 	let mainHorario = document.querySelector('#main');
 	let subHorario = document.querySelector('#sub');
+	let subs = subHorario.querySelectorAll('div');
 	
 	let mapa = document.querySelector('#divMapa');
 	let imapa = document.querySelector('#imapa');
@@ -188,6 +189,22 @@ window.onload = async () => {
 		let now = new Date();
 		let dayOfWeek = now.getDay();
 		let today = res.horarios[dayOfWeek];
+		let otherDays = [];
+
+		if (dayOfWeek == 0) otherDays = res.horarios.slice(dayOfWeek + 1);
+			if (dayOfWeek == 6) otherDays = res.horarios.slice(0, dayOfWeek);
+				else otherDays = (res.horarios.slice(dayOfWeek + 1)).concat(res.horarios.slice(0, dayOfWeek));
+
+		if (now.getHours() < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
+			if (now.getHours() >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
+				else mainHorario.innerHTML = `<p class='open'>Aberto</p><p>${today.horini}-${today.horfim}</p>`
+
+		for(let i = 0; i < otherDays.length; i++){
+			subs[i].innerHTML = `<p>${otherDays[i].dia}</p><p>${otherDays[i].horini}-${otherDays[i].horfim}</p>`
+		}
+
+		mainHorario.classList.remove(...mainHorario.classList);
+		subHorario.classList.remove(...subHorario.classList);
 	});
 
 	arrow.addEventListener('click', () => {
