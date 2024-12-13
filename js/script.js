@@ -231,4 +231,8 @@ window.onload = async () => {
 	window.onresize = () => {
 		resizePin(pin, imapa);
 	}
+	
+	window.onresize = () => {
+		resizePin();
+	}
 }
