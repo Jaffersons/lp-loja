@@ -16,11 +16,15 @@ const IDList = {
 	},
 	'google': {
 		classes: ['full', 'yellow'],
-		fill: (e, c) => { e.href = c },
+		fill: (e, c) => { 
+			if ( c == "" ) e.style.display = 'none';
+			e.href = c 
+		},
 	},
 	'pix': {
 		classes: ['full', 'yellow'],
 		fill: (e, c) => { 
+			if ( c == "" ) e.style.display = 'none';
 			e.style.cursor = 'pointer';
 			e.addEventListener('click', () => { copyText(c) }) 
 		}
