@@ -192,11 +192,11 @@ window.onload = async () => {
 		let otherDays = [];
 
 		if (dayOfWeek == 0) otherDays = res.horarios.slice(dayOfWeek + 1);
-			if (dayOfWeek == 6) otherDays = res.horarios.slice(0, dayOfWeek);
+			else if (dayOfWeek == 6) otherDays = res.horarios.slice(0, dayOfWeek);
 				else otherDays = (res.horarios.slice(dayOfWeek + 1)).concat(res.horarios.slice(0, dayOfWeek));
 
 		if (now.getHours() < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
-			if (now.getHours() >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
+			else if (now.getHours() >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre ${otherDays[0].dia.toLowerCase()} às ${otherDays[0].horini}</p>`;
 				else mainHorario.innerHTML = `<p class='open'>Aberto</p><p>${today.horini}-${today.horfim}</p>`
 
 		for(let i = 0; i < otherDays.length; i++){
@@ -230,9 +230,5 @@ window.onload = async () => {
 
 	window.onresize = () => {
 		resizePin(pin, imapa);
-	}
-	
-	window.onresize = () => {
-		resizePin();
 	}
 }
