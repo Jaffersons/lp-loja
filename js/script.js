@@ -182,7 +182,7 @@ window.onload = async () => {
 		imapa.setAttribute('data-src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
 		imapa.setAttribute('src', `https://www.openstreetmap.org/export/embed.html?layer=mapnik&${makeMapUrl(res.pes_geolat, res.pes_geolon)}`);
 		pin.style.display = '';
-		pin.href = `geo:${res.pes_geolat},${res.pes_geolon}?z=16&amp;q=${res.pes_geolat},${res.pes_geolon}`;
+		pin.href = `geo:${res.pes_geolat},${res.pes_geolon}?z=16&q=${res.pes_geolat},${res.pes_geolon}`;
 		resizePin(pin, imapa);
 
 		let now = new Date();
