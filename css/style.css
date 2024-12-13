@@ -351,10 +351,9 @@ div#modal.show {
 	}
 
 	main section#horario div#sub {
-		display: flex;
+		display: flex !important;
 		width: 100%;
-		max-height: 300px;
-		transition: none;
+		max-height: 300px !important;
 	}
   
 	section#mapa {

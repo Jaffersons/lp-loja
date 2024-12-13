@@ -1,3 +1,7 @@
+var globals = {
+	'horarioResizer': false
+}
+
 const IDList = {
 	'pes_fantas': {
 		classes: [],
@@ -122,6 +126,7 @@ window.onload = async () => {
 	let elements = document.querySelectorAll('.skeleton');
 
 	let arrow = document.querySelector('#arrow');
+	let horario = document.querySelector('#horario');
 	let mainHorario = document.querySelector('#main');
 	let subHorario = document.querySelector('#sub');
 	let subs = subHorario.querySelectorAll('div');
@@ -207,28 +212,41 @@ window.onload = async () => {
 		subHorario.classList.remove(...subHorario.classList);
 	});
 
-	arrow.addEventListener('click', () => {
+	const horarioResizer = () => {
 		if (subHorario.style.maxHeight === '0px' || subHorario.style.maxHeight === '') {
-    	subHorario.style.display = 'flex';
-    
+			subHorario.style.display = 'flex';
+		
 			setTimeout(() => {
-      	subHorario.style.maxHeight = '300px';
-    	}, 10);
+				subHorario.style.maxHeight = '300px';
+			}, 10);
 
-  	} else {
-    	subHorario.style.maxHeight = '0';
-    	
+		} else {
+			subHorario.style.maxHeight = '0';
+			
 			setTimeout(() => {
-      	subHorario.style.display = 'none';
-    	}, 500);
-  	}
+				subHorario.style.display = 'none';
+			}, 500);
+		}
 
 		setTimeout(() => {
 			resizePin(pin, imapa);
 		}, 600);
-	});
+	}
+
+	if( window.innerWidth < 821 ) {
+		horario.addEventListener('click', horarioResizer);
+		globals.horarioResizer = true;
+	}
 
 	window.onresize = () => {
 		resizePin(pin, imapa);
+
+		if ( window.innerWidth >= 821 && globals.horarioResizer === true ) {
+			horario.removeEventListener('click', horarioResizer);
+			globals.horarioResizer = false;
+		} else if (window.innerWidth < 821 && globals.horarioResizer === false) {
+			horario.addEventListener('click', horarioResizer);
+			globals.horarioResizer = true;
+		}
 	}
 }
