@@ -210,8 +210,8 @@ main section#horario div#main {
 main section#horario div#sub {
 	display: flex;
 	flex-direction: column;
-	gap: 0.204rem;
-	margin-top: 0.204rem;
+	gap: 0.404rem;
+	margin-top: 0.404rem;
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.5s ease-in-out;
@@ -232,6 +232,17 @@ main section#horario div#arrow img{
 	width: 0.8rem;
 }
 
+main section#horario div#main p:first-child,
+main section#horario div#sub div p:first-child {
+	display: grid;
+	align-items: center;
+}
+
+main section#horario div#main p:last-child,
+main section#horario div#sub div p:last-child {
+	text-align: end;
+}
+
 p.open {
 	font-weight: 700;
 	color: #3FBA57;
@@ -240,6 +251,11 @@ p.open {
 p.closed {
 	font-weight: 700;
 	color: #E35F5F;
+}
+
+p.almostClose {
+	font-weight: 700;
+	color: #ffbb29;
 }
 
 main section#mapa {
