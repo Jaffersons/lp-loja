@@ -1,4 +1,5 @@
 const globals = {
+	'hasPause': '',
 	'horarioResizer': false,
 	'hoursCompared': []
 }
@@ -68,19 +69,19 @@ async function delay(delay = 1000, callback = () => {} ) {
 }
 
 function showModal(){
-		let modal = document.querySelector('#modal');
-		// Torna a div visível instantaneamente, sem animação
-  	modal.style.visibility = 'visible';
-		modal.classList.add('show');
-  
-		setTimeout(() => {
-			modal.classList.remove('show');
-		}, 3000);
-		
-		setTimeout(() => {
-			modal.style.visibility = 'hidden'
-		}, 5000);
-	}
+	let modal = document.querySelector('#modal');
+	// Torna a div visível instantaneamente, sem animação
+	modal.style.visibility = 'visible';
+	modal.classList.add('show');
+
+	setTimeout(() => {
+		modal.classList.remove('show');
+	}, 3000);
+	
+	setTimeout(() => {
+		modal.style.visibility = 'hidden'
+	}, 5000);
+}
 
 async function copyText(textToCopy) {
 	if (navigator.clipboard && window.isSecureContext) {
@@ -175,13 +176,13 @@ window.onload = async () => {
 			"pes_geolat": "-27,589714",
 			"pes_geolon": "-48,515266",
 			"horarios": [
-        { "dia": "Domingo", "horafunc": { "pausa": false, "horario": [{ "horaini": "14:00", "horafim": "20:00" }] }},
-				{ "dia": "Segunda-feira", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
-        { "dia": "Terça-feira", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
-        { "dia": "Quarta-feira", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
-        { "dia": "Quinta-feira", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
-        { "dia": "Sexta-feira", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
-        { "dia": "Sábado", "horafunc": { "pausa": false, "horario": [{ "horaini": "10:00", "horafim": "22:00" }] }},
+        { "dia": "Domingo", "horario": [] },
+				{ "dia": "Segunda-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Terça-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Quarta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Quinta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Sexta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Sábado", "horario": [{ "horaini": "08:00", "horafim": "12:00" }] },
 			]
 		}
 
@@ -217,6 +218,7 @@ window.onload = async () => {
 		let hourNow = now.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'});
 		let otherDays = [];
 		today = res.horarios[dayOfWeek];
+		globals.hasPause = today.horario.length > 1 ? true : false;
 
 		//Define a ordem de listagem do dia a partir de hoje
 		if (dayOfWeek == 0) otherDays = res.horarios.slice(dayOfWeek + 1);
@@ -227,23 +229,23 @@ window.onload = async () => {
 		 * É preciso fazer alteração para suportar pausa para almoço
 		 * Também é preciso dar um upgrade no texto para "Fecha em breve às ..."
 		 */
-		if(!today.horafunc.pausa) {
-			openHourCompare = compareHour(hourNow, today.horafunc.horario[0].horaini);
-			closeHourCompare = compareHour(hourNow, today.horafunc.horario[0].horafim);
+		if(!globals.hasPause) {
+			openHourCompare = compareHour(hourNow, today.horario[0].horaini);
+			closeHourCompare = compareHour(hourNow, today.horario[0].horafim);
 
 			//Define o texto do dia de hoje
-			if (openHourCompare.isBefore) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horafunc.horario[0].horaini}</p>`;
+			if (openHourCompare.isBefore) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[0].horaini}</p>`;
 				else if (closeHourCompare.isAfter) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
-					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p>${today.horafunc.horario[0].horaini}-${today.horafunc.horario[0].horafim}</p>`
+					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p>${today.horario[0].horaini}-${today.horario[0].horafim}</p>`
 
 			//Define o texto para os demais dias
 			for(let i = 0; i < otherDays.length; i++){
 				let firstP = `<p>${otherDays[i].dia}</p>`
-				let secondP = '<p>' + (otherDays[i].horafunc.horario.length !== 0  ? `${otherDays[i].horafunc.horario[0].horaini}-${otherDays[i].horafunc.horario[0].horafim}` : 'Fechado') + '</p>'
+				let secondP = '<p>' + (otherDays[i].horario.length !== 0  ? `${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}` : 'Fechado') + '</p>'
 				subs[i].innerHTML = firstP + secondP;
 			}
 		} else {
-			today.horafunc.horario.forEach(horario => {
+			today.horario.forEach(horario => {
 				for(const hour in horario) {
 					globals.hoursCompared.push(compareHour(hourNow, horario[hour]));
 				}
@@ -252,21 +254,23 @@ window.onload = async () => {
 			if (globals.hoursCompared[1].isAfter && globals.hoursCompared[3].isAfter) {
 				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
 			} else if (globals.hoursCompared[0].isBefore) {
-				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horafunc.horario[0].horaini}</p>`;
+				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[0].horaini}</p>`;
 			} else if (globals.hoursCompared[1].isAfter && globals.hoursCompared[2].isBefore) {
-				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horafunc.horario[1].horaini}</p>`;
-			} else if ((globals.hoursCompared[0].isAfter && globals.hoursCompared[1].isBefore) || (globals.hoursCompared[2].isAfter && globals.hoursCompared[3].isBefore)) {
-				if (globals.hoursCompared[1].isNear) mainHorario.innerHTML = `<p class='almostClose'>Fecha em breve</p><p>${today.horafunc.horario[0].horafim} - Reabre às ${today.horafunc.horario[1].horaini}</p>`
-					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p style='font-size: 0.85rem'>Fecha às ${today.horafunc.horario[0].horafim} - Reabre às ${today.horafunc.horario[1].horaini}</p>`
+				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[1].horaini}</p>`;
+			} else if (globals.hoursCompared[0].isAfter && globals.hoursCompared[1].isBefore) {
+				if (globals.hoursCompared[1].isNear) mainHorario.innerHTML = `<p class='almostClose'>Fecha em breve</p><p>${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}</p>`
+					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p style='font-size: 0.85rem'>Fecha às ${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}</p>`
+			} else if(globals.hoursCompared[2].isAfter && globals.hoursCompared[3].isBefore) {
+				mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p>${today.horario[1].horaini}-${today.horario[1].horafim}</p>`
 			}
 
 			//Define o texto para os demais dias
 			for(let i = 0; i < otherDays.length; i++){
 				let firstP = `<p>${otherDays[i].dia}</p>`
 				let secondP = ''
-				if (otherDays[i].horafunc.horario.length === 0) secondP = '<p>Fechado</p>';
-					else if (otherDays[i].horafunc.horario.length === 1) secondP = `<p>${otherDays[i].horafunc.horario[0].horaini}-${otherDays[i].horafunc.horario[0].horafim}</p>`
-						else secondP = `<p>${otherDays[i].horafunc.horario[0].horaini}-${otherDays[i].horafunc.horario[0].horafim}<br>${otherDays[i].horafunc.horario[1].horaini}-${otherDays[i].horafunc.horario[1].horafim}</p>`;
+				if (otherDays[i].horario.length === 0) secondP = '<p>Fechado</p>';
+					else if (otherDays[i].horario.length === 1) secondP = `<p>${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}</p>`
+						else secondP = `<p>${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}<br>${otherDays[i].horario[1].horaini}-${otherDays[i].horario[1].horafim}</p>`;
 				subs[i].innerHTML = firstP + secondP;
 			}
 		}
@@ -282,26 +286,30 @@ window.onload = async () => {
 		if (status == 'boxOpened') {
 			mainHorarioText.innerHTML = today.dia;
 			
-			if (today.horafunc.pausa) {
-				mainHorarioSecondText.innerHTML = `${today.horafunc.horario[0].horaini}-${today.horafunc.horario[0].horafim}<br>${today.horafunc.horario[1].horaini}-${today.horafunc.horario[1].horafim}`;
+			if (globals.hasPause) {
+				mainHorarioSecondText.innerHTML = `${today.horario[0].horaini}-${today.horario[0].horafim}<br>${today.horario[1].horaini}-${today.horario[1].horafim}`;
 			}
 		} else {
 			if (mainHorarioText.className == 'open') {
 				mainHorarioText.innerHTML = 'Aberto';
-
-				if (today.horafunc.pausa) {
-					mainHorarioSecondText.innerHTML =`Fecha às ${today.horafunc.horario[0].horafim} - Reabre às ${today.horafunc.horario[1].horaini}`;
+				
+				if (globals.hasPause) {
+					if (globals.hoursCompared[0].isAfter && globals.hoursCompared[1].isBefore) {
+						mainHorarioSecondText.innerHTML =`Fecha às ${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}`;
+					} else {
+						mainHorarioSecondText.innerHTML = `${today.horario[1].horaini}-${today.horario[1].horafim}`;
+					}
 				}
 			} else if (mainHorarioText.className == 'almostClose') {
 				mainHorarioText.innerHTML = 'Fecha em breve';
-				mainHorarioSecondText.innerHTML = `${today.horafunc.horario[0].horafim} - Reabre às ${today.horafunc.horario[1].horaini}`;
+				mainHorarioSecondText.innerHTML = `${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}`;
 			} else {
 				mainHorarioText.innerHTML = 'Fechado';
-				if(today.horafunc.pausa) {
+				if(globals.hasPause) {
 					if (globals.hoursCompared[0].isBefore) {
-						mainHorarioSecondText.innerHTML = `Abre às ${today.horafunc.horario[0].horaini}`;
+						mainHorarioSecondText.innerHTML = `Abre às ${today.horario[0].horaini}`;
 					} else if (globals.hoursCompared[1].isAfter && globals.hoursCompared[2].isBefore) {
-						mainHorarioSecondText.innerHTML = `Abre às ${today.horafunc.horario[1].horaini}`;
+						mainHorarioSecondText.innerHTML = `Abre às ${today.horario[1].horaini}`;
 					}
 				}
 			}
