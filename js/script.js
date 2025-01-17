@@ -1,5 +1,7 @@
 const globals = {
-	'horarioResizer': false
+	'hasPause': '',
+	'horarioResizer': false,
+	'hoursCompared': []
 }
 
 const IDList = {
@@ -55,7 +57,7 @@ const IDList = {
 	},
 	'endereco': {
 		classes: [],
-		fill: (e, c) => { e.innerHTML = `${c.endereco}<br>${c.bairro} - ${c.cidade} - ${c.cep}` },
+		fill: (e, c) => { e.innerHTML = `${c.rua}<br>${c.bairro} - ${c.cidade} - ${c.cep}` },
 	}
 };
 
@@ -67,19 +69,19 @@ async function delay(delay = 1000, callback = () => {} ) {
 }
 
 function showModal(){
-		let modal = document.querySelector('#modal');
-		// Torna a div visível instantaneamente, sem animação
-  	modal.style.visibility = 'visible';
-		modal.classList.add('show');
-  
-		setTimeout(() => {
-			modal.classList.remove('show');
-		}, 3000);
-		
-		setTimeout(() => {
-			modal.style.visibility = 'hidden'
-		}, 5000);
-	}
+	let modal = document.querySelector('#modal');
+	// Torna a div visível instantaneamente, sem animação
+	modal.style.visibility = 'visible';
+	modal.classList.add('show');
+
+	setTimeout(() => {
+		modal.classList.remove('show');
+	}, 3000);
+	
+	setTimeout(() => {
+		modal.style.visibility = 'hidden'
+	}, 5000);
+}
 
 async function copyText(textToCopy) {
 	if (navigator.clipboard && window.isSecureContext) {
@@ -126,6 +128,23 @@ function resizePin(pin, imapa) {
 	pin.style.height = `${imapa.clientHeight}px`;
 }
 
+function prepareHourToCompare(hora) {
+	hora = parseFloat((hora.split(':', 2)).join('.'));
+
+	return hora;
+}
+
+function compareHour(now, hourToCompare) {
+	now = prepareHourToCompare(now)
+	hourToCompare = prepareHourToCompare(hourToCompare)
+
+	isBefore =  now < hourToCompare ? true : false;
+	isAfter =  now > hourToCompare ? true : false;
+	isNear = (Math.abs((now * 60) - (hourToCompare * 60))) > 0 && (Math.abs((now * 60) - (hourToCompare * 60))) < 31 ? true : false;
+
+	return { isBefore, isAfter, isNear };
+}
+
 window.onload = async () => {
 	let elements = document.querySelectorAll('.skeleton');
 
@@ -157,18 +176,18 @@ window.onload = async () => {
 			"pes_geolat": "-27,589714",
 			"pes_geolon": "-48,515266",
 			"horarios": [
-        { dia: "Domingo", horini: "14:00", horfim: "20:00" },
-				{ dia: "Segunda-feira", horini: "10:00", horfim: "22:00" },
-        { dia: "Terça-feira", horini: "10:00", horfim: "22:00" },
-        { dia: "Quarta-feira", horini: "10:00", horfim: "22:00" },
-        { dia: "Quinta-feira", horini: "10:00", horfim: "22:00" },
-        { dia: "Sexta-feira", horini: "10:00", horfim: "22:00" },
-        { dia: "Sábado", horini: "10:00", horfim: "22:00" },
+        { "dia": "Domingo", "horario": [] },
+				{ "dia": "Segunda-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Terça-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Quarta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Quinta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Sexta-feira", "horario": [{ "horaini": "08:00", "horafim": "12:00" }, { "horaini": "13:30", "horafim": "18:00" }] },
+        { "dia": "Sábado", "horario": [{ "horaini": "08:00", "horafim": "12:00" }] },
 			]
 		}
 
 		res.endereco = {
-			'endereco': res.endereco,
+			'rua': res.endereco,
 			'bairro': res.bairro,
 			'cidade': res.cidade,
 			'cep': res.cep,
@@ -196,22 +215,64 @@ window.onload = async () => {
 
 		let now = new Date();
 		let dayOfWeek = now.getDay();
-		let hourNow = (now.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'})).split(':', 1)
-		today = res.horarios[dayOfWeek];
+		let hourNow = now.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo'});
 		let otherDays = [];
+		today = res.horarios[dayOfWeek];
+		globals.hasPause = today.horario.length > 1 ? true : false;
 
+		//Define a ordem de listagem do dia a partir de hoje
 		if (dayOfWeek == 0) otherDays = res.horarios.slice(dayOfWeek + 1);
 			else if (dayOfWeek == 6) otherDays = res.horarios.slice(0, dayOfWeek);
 				else otherDays = (res.horarios.slice(dayOfWeek + 1)).concat(res.horarios.slice(0, dayOfWeek));
 
-		if (parseInt(hourNow) < parseInt(today.horini.slice(':'))) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horini}</p>`;
-			else if (parseInt(hourNow) >= parseInt(today.horfim.slice(':')) ) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
-				else mainHorario.innerHTML = `<p class='open'>Aberto</p><p>${today.horini}-${today.horfim}</p>`
+		/**
+		 * É preciso fazer alteração para suportar pausa para almoço
+		 * Também é preciso dar um upgrade no texto para "Fecha em breve às ..."
+		 */
+		if(!globals.hasPause) {
+			openHourCompare = compareHour(hourNow, today.horario[0].horaini);
+			closeHourCompare = compareHour(hourNow, today.horario[0].horafim);
 
-		for(let i = 0; i < otherDays.length; i++){
-			let firstP = `<p>${otherDays[i].dia}</p>`
-			let secondP = '<p>' + (otherDays[i].horini !== "" ? `${otherDays[i].horini}-${otherDays[i].horfim}` : 'Fechado') + '</p>'
-			subs[i].innerHTML = firstP + secondP;
+			//Define o texto do dia de hoje
+			if (openHourCompare.isBefore) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[0].horaini}</p>`;
+				else if (closeHourCompare.isAfter) mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
+					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p>${today.horario[0].horaini}-${today.horario[0].horafim}</p>`
+
+			//Define o texto para os demais dias
+			for(let i = 0; i < otherDays.length; i++){
+				let firstP = `<p>${otherDays[i].dia}</p>`
+				let secondP = '<p>' + (otherDays[i].horario.length !== 0  ? `${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}` : 'Fechado') + '</p>'
+				subs[i].innerHTML = firstP + secondP;
+			}
+		} else {
+			today.horario.forEach(horario => {
+				for(const hour in horario) {
+					globals.hoursCompared.push(compareHour(hourNow, horario[hour]));
+				}
+			});
+
+			if (globals.hoursCompared[1].isAfter && globals.hoursCompared[3].isAfter) {
+				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Fechado</p>`;
+			} else if (globals.hoursCompared[0].isBefore) {
+				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[0].horaini}</p>`;
+			} else if (globals.hoursCompared[1].isAfter && globals.hoursCompared[2].isBefore) {
+				mainHorario.innerHTML = `<p class='closed'>Fechado</p><p>Abre às ${today.horario[1].horaini}</p>`;
+			} else if (globals.hoursCompared[0].isAfter && globals.hoursCompared[1].isBefore) {
+				if (globals.hoursCompared[1].isNear) mainHorario.innerHTML = `<p class='almostClose'>Fecha em breve</p><p>${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}</p>`
+					else mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p style='font-size: 0.85rem'>Fecha às ${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}</p>`
+			} else if(globals.hoursCompared[2].isAfter && globals.hoursCompared[3].isBefore) {
+				mainHorario.innerHTML = `<p class='open'>Aberto agora</p><p>${today.horario[1].horaini}-${today.horario[1].horafim}</p>`
+			}
+
+			//Define o texto para os demais dias
+			for(let i = 0; i < otherDays.length; i++){
+				let firstP = `<p>${otherDays[i].dia}</p>`
+				let secondP = ''
+				if (otherDays[i].horario.length === 0) secondP = '<p>Fechado</p>';
+					else if (otherDays[i].horario.length === 1) secondP = `<p>${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}</p>`
+						else secondP = `<p>${otherDays[i].horario[0].horaini}-${otherDays[i].horario[0].horafim}<br>${otherDays[i].horario[1].horaini}-${otherDays[i].horario[1].horafim}</p>`;
+				subs[i].innerHTML = firstP + secondP;
+			}
 		}
 
 		mainHorario.classList.remove(...mainHorario.classList);
@@ -219,10 +280,40 @@ window.onload = async () => {
 	});
 
 	const mainHorarioTextChanger = status => {
-		let mainHorarioText = mainHorario.querySelector('p');
+		let mainHorarioText = mainHorario.querySelector('p:first-child');
+		let mainHorarioSecondText = mainHorario.querySelector('p:last-child');
 
-		if (status == 'boxOpened') mainHorarioText.innerHTML = today.dia;
-			else mainHorarioText.innerHTML = mainHorarioText.className == 'open' ? 'Aberto' : 'Fechado';
+		if (status == 'boxOpened') {
+			mainHorarioText.innerHTML = today.dia;
+			
+			if (globals.hasPause) {
+				mainHorarioSecondText.innerHTML = `${today.horario[0].horaini}-${today.horario[0].horafim}<br>${today.horario[1].horaini}-${today.horario[1].horafim}`;
+			}
+		} else {
+			if (mainHorarioText.className == 'open') {
+				mainHorarioText.innerHTML = 'Aberto';
+				
+				if (globals.hasPause) {
+					if (globals.hoursCompared[0].isAfter && globals.hoursCompared[1].isBefore) {
+						mainHorarioSecondText.innerHTML =`Fecha às ${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}`;
+					} else {
+						mainHorarioSecondText.innerHTML = `${today.horario[1].horaini}-${today.horario[1].horafim}`;
+					}
+				}
+			} else if (mainHorarioText.className == 'almostClose') {
+				mainHorarioText.innerHTML = 'Fecha em breve';
+				mainHorarioSecondText.innerHTML = `${today.horario[0].horafim} - Reabre às ${today.horario[1].horaini}`;
+			} else {
+				mainHorarioText.innerHTML = 'Fechado';
+				if(globals.hasPause) {
+					if (globals.hoursCompared[0].isBefore) {
+						mainHorarioSecondText.innerHTML = `Abre às ${today.horario[0].horaini}`;
+					} else if (globals.hoursCompared[1].isAfter && globals.hoursCompared[2].isBefore) {
+						mainHorarioSecondText.innerHTML = `Abre às ${today.horario[1].horaini}`;
+					}
+				}
+			}
+		}
 	}
 
 	const horarioResizer = () => {
